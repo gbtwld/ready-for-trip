@@ -1,7 +1,11 @@
-import { jsonLogger } from "./util/jsonLogger.mjs";
-
 export const processData = (data) => {
     let totalFareResult = [];
+
+    const now = new Date();
+    const utc = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+    const koreaTimeDiff = 9 * 60 * 60 * 1000;
+    const korNow = new Date(utc + koreaTimeDiff);
+
     const faresObj = Object.values(data.fares);
     faresObj.map((fares) => {
         fares.fare["A01"].map((singleFare) => {
@@ -14,8 +18,12 @@ export const processData = (data) => {
 
             const totalFare = trueFare + qCharge + tax;
 
-            totalFareResult.push({ TotalFare: totalFare, ...singleFare });
+            totalFareResult.push({
+                TotalFare: totalFare,
+                ScrapTime: korNow.toLocaleString("ko"),
+                url: singleFare.ReserveParameter["#cdata-section"],
+            });
         });
     });
-    jsonLogger(totalFareResult.sort((a, b) => a.TotalFare - b.TotalFare));
+    return totalFareResult.sort((a, b) => a.TotalFare - b.TotalFare);
 };
