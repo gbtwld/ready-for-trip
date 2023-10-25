@@ -1,6 +1,8 @@
 name: Flight Bot
 
 on:
+    push:
+        branches: [main]
     schedule:
         - cron: "*/20 * * * *" # 20분 마다
 
