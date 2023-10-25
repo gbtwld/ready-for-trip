@@ -21,4 +21,4 @@ jobs:
             - name: Run Main Program
               run: npm start
               env:
-                  NEIS_KEY: ${{ secrets.SLACK_TOKEN }}
+                  SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
