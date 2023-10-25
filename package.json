@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "node index.js",
+        "start": "node ./src/index.mjs",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -18,7 +18,12 @@
     },
     "homepage": "https://github.com/gbtwld/ready-for-trip#readme",
     "dependencies": {
+        "axios": "^1.5.1",
+        "fs": "^0.0.1-security",
         "graphql": "^16.8.1",
-        "graphql-request": "^6.1.0"
+        "graphql-request": "^6.1.0",
+        "lodash": "^4.17.21",
+        "path": "^0.12.7",
+        "waait": "^1.0.5"
     }
 }
