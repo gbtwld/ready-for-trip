@@ -1,6 +1,7 @@
 import { GraphQLClient, gql } from "graphql-request";
 import _ from "lodash";
 import wait from "waait";
+import { printLog } from "./util/logger.mjs";
 
 const NUM_OF_PEOPLE = 3;
 const DEPARTURE_AIRPORT = "GMP";
@@ -66,6 +67,7 @@ const HEADERS = {
 const client = new GraphQLClient(URL, { errorPolicy: "all", headers: HEADERS });
 
 export const requestHandler = async () => {
+    printLog("API 요청 시작");
     let resultObj = {};
 
     let requestVariables = {
@@ -90,6 +92,7 @@ export const requestHandler = async () => {
     try {
         while (requestVariables.galileoFlag || requestVariables.travelBizFlag) {
             const res = await client.request(QUERY, requestVariables);
+            printLog("API 요청중...");
             _.merge(resultObj, res.internationalList.results);
             if (requestVariables.galileoKey === "" || requestVariables.travelBizKey === "") {
                 requestVariables.galileoKey = res.internationalList.galileoKey;
@@ -99,8 +102,9 @@ export const requestHandler = async () => {
             requestVariables.travelBizFlag = res.internationalList.travelBizFlag;
             await wait(500);
         }
+        printLog("API 요청 완료");
         return resultObj;
     } catch (error) {
-        console.error(error);
+        printLog(error);
     }
 };

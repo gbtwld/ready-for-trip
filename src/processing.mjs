@@ -1,4 +1,7 @@
+import { printLog } from "./util/logger.mjs";
+
 export const processData = (data) => {
+    printLog("데이터 정제 시작");
     let totalFareResult = [];
 
     const now = new Date();
@@ -25,5 +28,6 @@ export const processData = (data) => {
             });
         });
     });
+    printLog("데이터 정제 완료");
     return totalFareResult.sort((a, b) => a.TotalFare - b.TotalFare);
 };
