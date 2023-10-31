@@ -130,3 +130,4 @@ dist
 .pnp.*
 
 /log
+.DS_Store
