@@ -100,7 +100,7 @@ export const requestHandler = async () => {
             }
             requestVariables.galileoFlag = res.internationalList.galileoFlag;
             requestVariables.travelBizFlag = res.internationalList.travelBizFlag;
-            await wait(500);
+            res.internationalList.galileoFlag ? await wait(100) : null;
         }
         printLog("API 요청 완료");
         return resultObj;
