@@ -4,8 +4,8 @@ import wait from "waait";
 import { printLog } from "./util/logger.mjs";
 
 const NUM_OF_PEOPLE = 3;
-const DEPARTURE_AIRPORT = "GMP";
-const ARRIVAL_AIRPORT = "HND";
+export const DEPARTURE_AIRPORT = "GMP";
+export const ARRIVAL_AIRPORT = "HND";
 const START_DATE = "20240329";
 const END_DATE = "20240401";
 

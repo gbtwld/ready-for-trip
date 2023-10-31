@@ -27,5 +27,3 @@ if (currentData[dataLength - 2].TotalFare !== currentData[dataLength - 1].TotalF
 
     postSlackMessage(message, url);
 }
-
-printLog("작업 완료");
