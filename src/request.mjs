@@ -64,7 +64,7 @@ const HEADERS = {
     Referer: `https://flight.naver.com/flights/international/${DEPARTURE_AIRPORT}-${ARRIVAL_AIRPORT}-${START_DATE}/${ARRIVAL_AIRPORT}-${DEPARTURE_AIRPORT}-${END_DATE}?adult=${NUM_OF_PEOPLE}&isDirect=true&fareType=Y`,
 };
 
-const client = new GraphQLClient(URL, { errorPolicy: "none", headers: HEADERS });
+const client = new GraphQLClient(URL, { timeout: 30000, headers: HEADERS });
 
 export const requestHandler = async () => {
     printLog("API 요청 시작");
@@ -100,7 +100,7 @@ export const requestHandler = async () => {
             }
             requestVariables.galileoFlag = res.internationalList.galileoFlag;
             requestVariables.travelBizFlag = res.internationalList.travelBizFlag;
-            res.internationalList.galileoFlag ? await wait(100) : null;
+            res.internationalList.galileoFlag ? await wait(500) : null;
         }
         printLog("API 요청 완료");
         return resultObj;
