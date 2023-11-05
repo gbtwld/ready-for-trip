@@ -67,44 +67,50 @@ const HEADERS = {
 const client = new GraphQLClient(URL, { timeout: 30000, headers: HEADERS });
 
 export const requestHandler = async () => {
-    printLog("API 요청 시작");
-    let resultObj = {};
+    let isFinish = false;
+    let tryCount = 0;
+    while (!isFinish && tryCount < 3) {
+        printLog("API 요청 시작");
+        let resultObj = {};
 
-    let requestVariables = {
-        adult: NUM_OF_PEOPLE,
-        child: 0,
-        infant: 0,
-        where: "pc",
-        isDirect: true,
-        galileoFlag: true,
-        travelBizFlag: true,
-        fareType: "Y",
-        itinerary: [
-            { departureAirport: DEPARTURE_AIRPORT, arrivalAirport: ARRIVAL_AIRPORT, departureDate: START_DATE },
-            { departureAirport: ARRIVAL_AIRPORT, arrivalAirport: DEPARTURE_AIRPORT, departureDate: END_DATE },
-        ],
-        stayLength: "",
-        trip: "RT",
-        galileoKey: "",
-        travelBizKey: "",
-    };
+        let requestVariables = {
+            adult: NUM_OF_PEOPLE,
+            child: 0,
+            infant: 0,
+            where: "pc",
+            isDirect: true,
+            galileoFlag: true,
+            travelBizFlag: true,
+            fareType: "Y",
+            itinerary: [
+                { departureAirport: DEPARTURE_AIRPORT, arrivalAirport: ARRIVAL_AIRPORT, departureDate: START_DATE },
+                { departureAirport: ARRIVAL_AIRPORT, arrivalAirport: DEPARTURE_AIRPORT, departureDate: END_DATE },
+            ],
+            stayLength: "",
+            trip: "RT",
+            galileoKey: "",
+            travelBizKey: "",
+        };
 
-    try {
-        while (requestVariables.galileoFlag || requestVariables.travelBizFlag) {
-            const res = await client.request(QUERY, requestVariables);
-            printLog("API 요청중...");
-            _.merge(resultObj, res.internationalList.results);
-            if (requestVariables.galileoKey === "" || requestVariables.travelBizKey === "") {
-                requestVariables.galileoKey = res.internationalList.galileoKey;
-                requestVariables.travelBizKey = res.internationalList.travelBizKey;
+        try {
+            while (requestVariables.galileoFlag || requestVariables.travelBizFlag) {
+                const res = await client.request(QUERY, requestVariables);
+                printLog("API 요청중...");
+                _.merge(resultObj, res.internationalList.results);
+                if (requestVariables.galileoKey === "" || requestVariables.travelBizKey === "") {
+                    requestVariables.galileoKey = res.internationalList.galileoKey;
+                    requestVariables.travelBizKey = res.internationalList.travelBizKey;
+                }
+                requestVariables.galileoFlag = res.internationalList.galileoFlag;
+                requestVariables.travelBizFlag = res.internationalList.travelBizFlag;
+                res.internationalList.galileoFlag ? await wait(500) : null;
             }
-            requestVariables.galileoFlag = res.internationalList.galileoFlag;
-            requestVariables.travelBizFlag = res.internationalList.travelBizFlag;
-            res.internationalList.galileoFlag ? await wait(500) : null;
+            printLog("API 요청 완료");
+            isFinish = true;
+            return resultObj;
+        } catch (error) {
+            printLog(error);
+            tryCount += 1;
         }
-        printLog("API 요청 완료");
-        return resultObj;
-    } catch (error) {
-        printLog(error);
     }
 };
